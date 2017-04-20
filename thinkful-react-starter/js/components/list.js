@@ -1,50 +1,32 @@
 import React from 'react';
 import Card from './card';
 
-export default function CardList(props) {
-    const cardArray = props.lists.map((list, index) =>
-        <Card text={list.title} />
-    );
-    return (
-        <div>
-            <div className="list-title">{props.title}</div>
-            <div className="card-list">
-                {cardArray}
-            </div>
-            <form>
-                <input type="text"></input>
-                <button type="submit"></button>
-            </form>
-        </div>
-    );
-}
-
-class Surprise extends React.Component {
+export default class CardList extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            clicked: false
-        }
-
-        this.onAddInputChanged = this.onAddInputChanged.bind(this);
+        super(props)
+        this.submitForm = this.submitForm.bind(this)
     }
 
-    onButtonClick() {
-        this.setState({
-            clicked: true
-        })
+    submitForm(event) {
+        event.preventDefault()
+        console.log('form submitted')
+        this.props.onAddSubmit()
     }
 
     render() {
+        const cardArray = this.props.list.cards.map((cardText, index) => <Card key={index} text={cardText} />);
         return (
             <div>
-                <Button onChange={this.onAddInputChanged} text='Ready to be amazed?' />
-                {this.state.clicked ? <SoundCloudEmbed trackId='191075550' /> : null}
+                <div className="list-title">{this.props.list.title}</div>
+                <div className="card-list">
+                    {cardArray}
+                </div>
+                <form onSubmit={this.submitForm}>
+                    <input type="text" onChange={this.props.onAddInputChanged}/>
+                    <button type="submit">Submit</button>
+                </form>
             </div>
         );
     }
-}
 
-document.addEventListener('DOMContentLoaded', () =>
-    ReactDOM.render(<Surprise />, document.getElementById('app'))
-);
+}
